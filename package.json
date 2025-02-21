@@ -1,15 +1,21 @@
 {
   "name": "@estarlincito/ui",
   "type": "module",
-  "version": "1.0.01",
+  "version": "1.0.6",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "types": "dist/esm/index.d.ts",
   "scripts": {
     "build": "vite build",
-    "build:types": "tsc",
     "lint": "eslint .",
-    "git": "rm -rf dist && pnpm tsc && read -p \"Enter commit message: \" msg; git add .; git commit -m \"$msg\"; git push && npm publish --access public"
+    "git": "rm -rf dist && pnpm vite build && read -p \"Enter commit message: \" msg; git add .; git commit -m \"$msg\"; git push && npm publish --access public"
   },
   "keywords": [],
   "author": {
@@ -36,22 +42,32 @@
     "node": "^23"
   },
   "devDependencies": {
+    "@estarlincito/eslint": "^1.6.0",
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.10",
-    "eslint": "^9.20.0",
-    "prettier": "^3.4.2",
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.20.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.0.0",
+    "vite": "^6.1.1",
+    "vite-plugin-dts": "^4.5.0",
+    "styled-components": "^6.1.15"
+  },
+  "dependencies": {
+    "@estarlincito/utils": "^2.4.2",
+    "@radix-ui/react-form": "^0.1.2",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@radix-ui/themes": "^3.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "vite": "^6.1.1"
+    "react-hook-form": "^7.54.2",
+    "react-hot-toast": "^2.5.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild"
+      "esbuild",
+      "sharp"
     ]
   }
 }

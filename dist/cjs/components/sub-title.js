@@ -1,0 +1,1 @@
+"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});const t=require("@radix-ui/themes"),i=require("react"),l=e=>e&&e.__esModule?e:{default:e},u=l(i),a=e=>u.default.createElement(t.Heading,{weight:e.weight?e.weight:"light",...e,size:e.size?e.size:{initial:"4",lg:"6"}});exports.SubTitle=a;

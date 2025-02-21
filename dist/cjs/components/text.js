@@ -1,0 +1,1 @@
+"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});const t=require("@radix-ui/themes"),u=require("react"),s=e=>e&&e.__esModule?e:{default:e},l=s(u),r=e=>l.default.createElement(t.Text,{...e,size:e.size?e.size:"5"});exports.Text=r;

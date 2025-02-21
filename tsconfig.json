@@ -6,8 +6,10 @@
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "dist",
+    "outDir": "./dist/types",
     "rootDir": "src",
+    "baseUrl": ".",
+    "paths": { "@/*": ["src/*"] },
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -15,11 +17,6 @@
     "forceConsistentCasingInFileNames": true,
     "emitDeclarationOnly": true
   },
-  "include": [
-    "src/**/*.ts",
-    "eslint.config.js",
-    "src/index.ts",
-    "src/title.tsx"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules"]
 }
