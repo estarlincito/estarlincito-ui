@@ -1,1 +1,0 @@
-"use strict";Object.defineProperties(exports,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}});const t=require("@radix-ui/themes"),r=require("react"),n=e=>e&&e.__esModule?e:{default:e},l=n(r),u=e=>l.default.createElement(t.Flex,{direction:"column",gap:"5",p:"5",align:e.align,justify:"center",minHeight:"90vh"},e.children);exports.Wrapper=u;

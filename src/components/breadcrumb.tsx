@@ -1,6 +1,5 @@
 import { Box, Flex, Link, Strong, Text } from '@radix-ui/themes';
-import React from 'react';
-import { styled } from 'styled-components';
+import * as stylex from '@stylexjs/stylex';
 
 type Color =
   | (
@@ -44,10 +43,12 @@ interface Props {
   //usePathname: () => string;
 }
 
-const ThirdSlug = styled(Box)`
-  text-overflow: 'ellipsis';
-  white-space: 'nowrap';
-`;
+const styles = stylex.create({
+  base: {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+});
 
 export const Breadcrumb = ({ slug, color }: Props) => {
   const pathname = '';
@@ -88,18 +89,19 @@ export const Breadcrumb = ({ slug, color }: Props) => {
             <Strong>/</Strong>
           </Text>
 
-          <ThirdSlug
+          <Box
             asChild
             maxWidth={{
               initial: '5.625rem',
               md: '12.5rem',
             }}
             overflow='hidden'
+            {...stylex.props(styles.base)}
           >
             <Link size='2' href={thirdSlug.route} target='_self'>
               <Strong>{thirdSlug.title}</Strong>
             </Link>
-          </ThirdSlug>
+          </Box>
         </>
       )}
     </Flex>

@@ -1,19 +1,32 @@
 {
   "name": "@estarlincito/ui",
   "type": "module",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/es/index.mjs",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": "./dist/es/index.mjs",
+      "require": "./dist/cjs/index.cjs"
+    },
+    "./pages": {
+      "import": "./dist/es/pages/index.mjs",
+      "require": "./dist/cjs/pages/index.cjs"
+    },
+    "./*": "./*"
+  },
+  "types": "dist/es/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "pages": [
+        "dist/es/pages/index.d.ts"
+      ]
     }
   },
-  "types": "dist/esm/index.d.ts",
   "scripts": {
     "build": "vite build",
+    "build:w": "vite build --watch",
     "lint": "eslint .",
     "git": "rm -rf dist && pnpm vite build && read -p \"Enter commit message: \" msg; git add .; git commit -m \"$msg\"; git push && npm publish --access public"
   },
@@ -42,17 +55,25 @@
     "node": "^23"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.9",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
+    "@babel/preset-typescript": "^7.26.0",
     "@estarlincito/eslint": "^1.6.0",
+    "@stylexjs/rollup-plugin": "^0.10.1",
+    "@stylexjs/stylex": "^0.10.1",
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "0.25.0",
     "eslint": "^9.20.0",
     "prettier": "^3.4.2",
     "typescript": "^5.0.0",
     "vite": "^6.1.1",
+    "vite-plugin-babel": "^1.3.0",
     "vite-plugin-dts": "^4.5.0",
-    "styled-components": "^6.1.15"
+    "vite-plugin-stylex": "^0.13.0"
   },
   "dependencies": {
     "@estarlincito/utils": "^2.4.2",
@@ -63,6 +84,16 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-hot-toast": "^2.5.2"
+  },
+  "peerDependencies": {
+    "@radix-ui/themes": "^3.0.0",
+    "@radix-ui/react-form": "^0.1.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-hook-form": "^7.54.2",
+    "react-hot-toast": "^2.5.2",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@estarlincito/utils": "^2.4.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

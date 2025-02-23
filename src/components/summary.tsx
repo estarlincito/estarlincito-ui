@@ -1,5 +1,4 @@
 import { Blockquote } from '@radix-ui/themes';
-import React from 'react';
 
 interface Props {
   summary: string;

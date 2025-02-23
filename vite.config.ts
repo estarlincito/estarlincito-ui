@@ -1,88 +1,110 @@
-//import react from '@vitejs/plugin-react';
+import styleX from '@stylexjs/rollup-plugin';
+import react from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-// Get all component files from the components folder dynamically
-const getFilesRecursively = (directory: string) => {
+const getFilesRecursively = (dir: string) => {
   let results: string[] = [];
-  const list = fs.readdirSync(directory);
+  const list = fs.readdirSync(dir);
   list.forEach((file) => {
-    const filePath = path.join(directory, file);
+    const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
     if (stat && stat.isDirectory()) {
       results = results.concat(getFilesRecursively(filePath));
     } else {
-      if (filePath.includes('types')) {
-        return;
-      }
       results.push(filePath);
     }
   });
 
   return results;
 };
-const componentsDir = path.resolve(__dirname, 'src');
-const allFiles = getFilesRecursively(componentsDir);
-const componentFiles = allFiles.filter(
-  (file) => file.endsWith('.tsx') || file.endsWith('.ts'),
-);
 
-const entry = componentFiles.reduce((acc, file) => {
-  const relative = path.relative(componentsDir, file);
-  const entryName = relative.replace(/\.(tsx|ts)$/, '');
-  acc[entryName] = file;
-  return acc;
-}, {});
+const dir = path.resolve(__dirname, 'src');
+
+const getComponentEntries = (dir: string) => {
+  const allFiles = getFilesRecursively(dir);
+  const componentFiles = allFiles.filter(
+    (file) => file.endsWith('.tsx') || file.endsWith('.ts'),
+  );
+
+  const entry = componentFiles.reduce((acc, file) => {
+    const relative = path.relative(dir, file);
+    const entryName = relative.replace(/\.(tsx|ts)$/, '');
+    acc[entryName] = file;
+    return acc;
+  }, {});
+  return entry;
+};
+
+const reactPlugin = react({
+  babel: { configFile: true },
+  jsxRuntime: 'classic',
+});
+
+const dtsPlugin = dts({
+  entryRoot: 'src',
+  insertTypesEntry: true,
+  outDir: ['dist/es', 'dist/cjs'],
+  tsconfigPath: './tsconfig.json',
+});
+
+const styleXPlugin = styleX({
+  dev: process.env.NODE_ENV === 'development',
+  fileName: 'styles.css',
+  useCSSLayers: false,
+});
 
 export default defineConfig({
-  plugins: [
-    //react({ jsxRuntime: 'automatic' }),
-    dts({
-      // Use the src directory as the root for declarations so that the folder structure is preserved
-      entryRoot: componentsDir,
-      // This will insert a types entry in package.json (optional)
-      insertTypesEntry: true,
-      // You can specify output directories if needed; here, we generate declarations along with the JS outputs
-      outDir: ['dist/esm', 'dist/cjs'],
-    }),
-  ],
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   build: {
+    cssCodeSplit: true,
     lib: {
       entry: {
-        index: path.resolve(__dirname, 'src/index.ts'), // Main export file
-        ...entry, // Dynamically added components
+        //index: path.resolve(__dirname, 'src/index.ts'),
+        ...getComponentEntries(dir),
       },
-      // Generate both ESM and CJS
-      fileName: (format, entryName) => {
-        return format === 'es' ? `esm/${entryName}.js` : `cjs/${entryName}.js`;
-      },
-
+      fileName: (format, name) =>
+        `${format}/${name}.${format === 'es' ? 'mjs' : 'cjs'}`,
       formats: ['es', 'cjs'],
-      name: '@estarlincito/ui', // Define file names
     },
-    // Don't bundle React
-
+    minify: false,
     rollupOptions: {
-      external: ['react', 'react-dom', '@radix-ui/themes'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        '@radix-ui/react-ssr',
+        '@radix-ui/themes',
+        '@radix-ui/react-form',
+        '@radix-ui/react-icons',
+      ],
       output: {
-        esModule: true,
+        banner: (chunk) => {
+          if (!chunk.facadeModuleId) return '';
+          const code = fs.readFileSync(chunk.facadeModuleId, 'utf-8');
+          return code.includes("'use client'") || code.includes('"use client"')
+            ? "'use client';"
+            : '';
+        },
         globals: {
+          '@radix-ui/themes': 'RadixUIThemes',
           react: 'React',
+          'react/jsx-runtime': 'jsxRuntime',
           'react-dom': 'ReactDOM',
         },
-        interop: 'auto',
         preserveModules: true,
         preserveModulesRoot: 'src',
       },
     },
     target: 'esnext',
   },
+  plugins: [reactPlugin, styleXPlugin, dtsPlugin],
+
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': dir,
     },
   },
 });

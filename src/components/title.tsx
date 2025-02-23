@@ -1,5 +1,4 @@
 import { Heading, type HeadingProps } from '@radix-ui/themes';
-import React from 'react';
 
 export const Title = (props: HeadingProps) => {
   return (
